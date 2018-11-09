@@ -1,24 +1,40 @@
 package doanpttkgt;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BaiTau {
-	ArrayList<Integer> danhSach=null;
+	private List<Column> baiTau=null;
+	private int height;
+	private int columns;
+	private int containers;
+	
+	
 	public BaiTau() {
-		this.danhSach=new ArrayList<Integer>();
+		this.baiTau = new ArrayList<Column>();
+	}
+	
+	public void setHeight(int height) {
+		this.height = height;
+	}
+	
+	public void setColumns(int columns) {
+		this.columns = columns;
+	}
+	
+	public void setContainers(int containers) {
+		this.containers = containers;
 	}
 	
 	public void themContainer(){
 		BufferedReader brRead = null;
 
         try {   
-        	brRead = new BufferedReader(new FileReader("C:\\Users\\C01\\Downloads\\test.txt"));       
+        	brRead = new BufferedReader(new FileReader("test.txt"));       
 
-            System.out.println("�?�?c nội dung file sử dụng phương thức read()");
+            System.out.println("�?�?c nội dung file sử dụng phương thức read()");
 
             String num;
             String kitu[];
@@ -43,29 +59,18 @@ public class BaiTau {
             }
         }
 	}
-	/*public void inFile(){
-		BufferedWriter bw = null;
-		FileWriter fw = null;
-		try { 
-			
-			fw = new FileWriter("C:\\Users\\C01\\Downloads\\testResult.txt");
-			bw = new BufferedWriter(fw);
-			bw.write();
- 
-			System.out.println("Xong");
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bw != null)
-					bw.close();
-				if (fw != null)
-					fw.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
+
+	public int getHeight() {
+		return this.height;
 	}
-	}*/
+
+	public int getColumns() {
+		return this.columns;
+	}
 	
+	public List<Column> getBaiTau() {
+		return baiTau;
+	}
+
+
 }

@@ -1,17 +1,22 @@
 package doanpttkgt;
 
 public class Container {
-	private int soContainer;
-	private int colums;
+	private String soContainer;
+	private int column;
 	private int row;
 	
-
-	public int getColums() {
-		return colums;
+	public Container(String soContainer, int column, int row) {
+		this.soContainer = soContainer;
+		this.column = column;
+		this.row = row;
 	}
 
-	public void setColums(int colums) {
-		this.colums = colums;
+	public int getColums() {
+		return column;
+	}
+
+	public void setColums(int column) {
+		this.column = column;
 	}
 
 	public int getRow() {
@@ -22,11 +27,11 @@ public class Container {
 		this.row = row;
 	}
 
-	public int getSoContainer() {
+	public String getSoContainer() {
 		return soContainer;
 	}
 
-	public void setSoContainer(int soContainer) {
+	public void setSoContainer(String soContainer) {
 		this.soContainer = soContainer;
 	}
 
