@@ -23,4 +23,10 @@ public class BaiChinh {
 	public List<Column> getBaiChinh() {
 		return baiChinh;
 	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	
 }

@@ -13,121 +13,158 @@ public class Main {
 	private static BaiChinh baiChinh;
 	private static BaiTam baiTam;
 	private static BaiTau baiTau;
-	
-	public static void docFile(String fileName) throws IOException{
+
+	public static void docFile(String fileName) throws IOException {
 		try {
 			FileReader fr = new FileReader(fileName);
 			BufferedReader br = new BufferedReader(fr);
-			
-			
+
 			String line = br.readLine();
 			int flag = -1;
-			while(line!=null)
-			{  
-			System.out.println("flag = "+flag);
-				//Xử lý dữ liệu đọc vào
-				if(line.contains("ship")) {
-					flag = 1; //1 : bãi tàu
+			while (line != null) {
+				// System.out.println("flag = "+flag);
+				// Xử lý dữ liệu đọc vào
+				if (line.contains("ship")) {
+					flag = 1; // 1 : bãi tàu
 				}
-				if(line.contains("yard")) {
-					flag = 3; //3: bãi chính
+				if (line.contains("yard")) {
+					flag = 3; // 3: bãi chính
 				}
-				if(line.contains("containers") && flag == 3) {
-					flag = 0; //0: container
+				if (line.contains("containers") && flag == 3) {
+					flag = 0; // 0: container
 				}
-				
-				if(flag == 1) {
-					System.out.println("Setup bãi tàu");
-					if(line.contains("height")) {
+
+				if (flag == 1) {
+					// System.out.println("Setup bãi tàu");
+					if (line.contains("height")) {
 						String s[] = line.split("//");
 						baiTau.setHeight(Integer.parseInt(s[0]));
 					}
-					if(line.contains("columns")) {
+					if (line.contains("columns")) {
 						String s[] = line.split("//");
 						baiTau.setColumns(Integer.parseInt(s[0]));
 					}
-					if(line.contains("containers")) {
+					if (line.contains("containers")) {
 						String s[] = line.split("//");
 						baiTau.setContainers(Integer.parseInt(s[0]));
 					}
 				}
-				if(flag == 3) {
-					System.out.println("Setup bãi chính");
-					if(line.contains("height")) {
+				if (flag == 3) {
+					// System.out.println("Setup bãi chính");
+					if (line.contains("height")) {
 						String s[] = line.split("//");
 						baiChinh.setHeight(Integer.parseInt(s[0]));
+						System.out.println(" Chiều cao của bãi chính là :" + baiChinh.getHeight());
 					}
 				}
-				
-				if(flag == 0) {
+
+				if (flag == 0) {
 					System.out.println("Đọc container");
-					//Khởi tạo bãi tàu
-					for(int i = 0; i < baiTau.getColumns();i++) {
+					// Khởi tạo bãi tàu
+					for (int i = 0; i < baiTau.getColumns(); i++) {
 						baiTau.getBaiTau().add(new Column());
 					}
-					//Tiến hành đọc vào dữ liệu container
-					br.readLine(); //Đọc dòng kế tiếp (dòng có chỉ số của cột)
-					while(line!=null) { 
+					// Tiến hành đọc vào dữ liệu container
+					br.readLine(); // Đọc dòng kế tiếp (dòng có chỉ số của cột)
+					while (line != null) {
 						line = br.readLine();
-						
+
 						String dong[] = null;
-						if(line!=null && !line.equals("")) {
-							 dong = line.split("\t");
-							 
-							//Bỏ qua cột 0 vì nó là chỉ số cột
+						if (line != null && !line.equals("")) {
+							dong = line.split("\t");
+
+							// Bỏ qua cột 0 vì nó là chỉ số cột
 							int row = 0;
-							for(int j = 1;j < dong.length; j++) {
-								String soContainer  = dong[j];
+							for (int j = 1; j < dong.length; j++) {
+								String soContainers = dong[j];
+								int soContainer;
+								if (soContainers.equals("x")) {
+									soContainer = -1;
+								} else {
+									soContainer = Integer.parseInt(dong[j]);
+								}
 								int column = j;
 								++row;
-								baiTau.getBaiTau().get(j-1).getColumn().push(new Container(soContainer,column,row));
+								baiTau.getBaiTau().get(j - 1).getColumn().push(new Container(soContainer, column, row));
 							}
 						}
-						
+
 					}
 				}
-				
+
 				line = br.readLine();
 			}
 			daoNguocDuLieu();
 			br.close();
 			fr.close();
-		}catch (FileNotFoundException e) {
-			System.out.println("Không tìm thấy file "+fileName);
+		} catch (FileNotFoundException e) {
+			System.out.println("Không tìm thấy file " + fileName);
 			System.exit(0);
 		}
-		
-		
-		
-		
+
 	}
-	
-	public static void daoNguocDuLieu(){
-		for(int i = 0;i< baiTau.getColumns();i++) {
+
+	public static void daoNguocDuLieu() {
+		for (int i = 0; i < baiTau.getColumns(); i++) {
 			List<Container> listCon = new ArrayList<>();
-			for(int j = 0; j < baiTau.getHeight(); j++) {
+			for (int j = 0; j < baiTau.getHeight(); j++) {
 				Container con = baiTau.getBaiTau().get(i).getColumn().pop();
 				listCon.add(con);
-				
+
 			}
-			
-			//Đổ lại 
-			for(int k = 0; k< baiTau.getHeight(); k++) {
+
+			// Đổ lại
+			for (int k = 0; k < baiTau.getHeight(); k++) {
 				baiTau.getBaiTau().get(i).getColumn().push(listCon.get(k));
 			}
-			
+
 		}
 	}
-	
-	public static void khoiTaoBaiChinh() {
-		
+
+	public static List<Container> layContainerBC() {
+		baiTau.getHeight();
+		List<Container> listSS = new ArrayList<>();
+
+		for (int i = 0; i < baiTau.getColumns(); i++) {
+			if (!baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
+				Container con = baiTau.getBaiTau().get(i).getColumn().pop();// lay object container
+				int soContainer = con.getSoContainer();// lay gia tri cua container
+
+				while (soContainer == -1 && !baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
+					if (!baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
+						// neu la x thi lay container o hang tiep theo cua cot
+						con = baiTau.getBaiTau().get(i).getColumn().pop();
+						soContainer = con.getSoContainer();
+					}
+				}
+				if (!(soContainer == -1)) {
+					listSS.add(con);
+				}
+			}
+		}
+		return listSS;
+	}
+
+	public static List<Container> sapXepListCon() {
+		List<Container> list = layContainerBC();
+		for (int i = 0; i < list.size() - 1; i++) {
+			for (int j = i + 1; j < list.size(); j++) {
+				if (list.get(i).getSoContainer() < list.get(j).getSoContainer()) {
+					Container temp = list.get(i);
+					list.set(i, list.get(j));
+					list.set(j, temp);
+				}
+			}
+		}
+		return list;
 	}
 	
+
 	public static void main(String[] args) {
 		baiChinh = new BaiChinh();
 		baiTam = new BaiTam();
 		baiTau = new BaiTau();
-		
+
 		try {
 			docFile("test.txt");
 		} catch (IOException e) {
@@ -135,46 +172,14 @@ public class Main {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		//test in baiTau
-//		System.out.println("Bắt đầu test");
-//		for(int i = 0 ;i< baiTau.getHeight();i++) {
-//			for(int j = 0; j < baiTau.getColumns(); j++) {
-//				System.out.print((String)(baiTau.getBaiTau().get(j).getColumn().pop().getSoContainer()+"\t"));
-//			}
-//			System.out.println();
-//		}
-		
-		System.out.println("Đây là dòng đâu nè: ");
-		List<Container> listSS = new ArrayList<>();
-		for(int i = 0;i<baiTau.getColumns();i++) {
-			Container con = baiTau.getBaiTau().get(i).getColumn().pop();
-			String soContainer = con.getSoContainer();
-			while(soContainer.equals("x")&&!baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
-				if(!baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
-					con = baiTau.getBaiTau().get(i).getColumn().pop();
-					soContainer = con.getSoContainer();
+		for (int i = 0; i < baiTau.getHeight(); i++) {
+			List<Container> list = sapXepListCon();
+			if (list.size()!=0) {
+				System.out.print("\nso lon nhat dong :" + i);
+				for (Container container : list) {
+					System.out.print(container.getSoContainer() + " ");
 				}
-				
-			}
-			if(!soContainer.equals("x")) {
-				listSS.add(con);
-				System.out.print(soContainer+"  ");
-			}
-			
-		}
-		Container conMax = listSS.get(0);
-		int max = Integer.parseInt(listSS.get(0).getSoContainer());
-		for(int i = 1; i< listSS.size();i++) {
-			int x = Integer.parseInt(listSS.get(0).getSoContainer());
-			if(max<x) {
-				max = x;
-				conMax = listSS.get(i);
 			}
 		}
-		System.out.println("\nSố lớn nhất là: "+max);
-		baiChinh.getBaiChinh().get(0).getColumn().push(conMax);
-		System.out.println("Cái vừa thêm vô bãi chính: "+ 
-				baiChinh.getBaiChinh().get(0).getColumn().pop().getSoContainer());
 	}
-
 }

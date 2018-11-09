@@ -1,11 +1,11 @@
 package doanpttkgt;
 
 public class Container {
-	private String soContainer;
+	private int soContainer;
 	private int column;
 	private int row;
 	
-	public Container(String soContainer, int column, int row) {
+	public Container(int soContainer, int column, int row) {
 		this.soContainer = soContainer;
 		this.column = column;
 		this.row = row;
@@ -27,11 +27,11 @@ public class Container {
 		this.row = row;
 	}
 
-	public String getSoContainer() {
+	public int getSoContainer() {
 		return soContainer;
 	}
 
-	public void setSoContainer(String soContainer) {
+	public void setSoContainer(int soContainer) {
 		this.soContainer = soContainer;
 	}
 
