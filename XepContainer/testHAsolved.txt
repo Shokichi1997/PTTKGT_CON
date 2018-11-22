@@ -1,60 +1,76 @@
 //ship
 5//height
 30//columns
-37//containers
+53//containers
 //yard
 4//height
 
 //OUT PUT
-0.013//Total Cost of moving
+0.019//Total Cost of moving
 0//Cost of moving to Temporary Yard
 //Containers Position in Main Yard
-	c1	c2	c3	c4	c5	c6	c7	c8	c9	c10	
-r1	1	4	7	8	10	2	3	5	6	 	
+	c1	c2	c3	c4	c5	c6	c7	c8	c9	c10	c11	c12	c13	c14	
+r1	1	4	7	8	10	12	2	5	6	9	3	14	 	 	
 
-r2	35	30	24	19	15	23	13	9	25	 	
+r2	37	34	29	22	18	13	46	38	23	11	47	26	40	 	
 
-r3	36	32	28	20	16	27	17	11	26	 	
+r3	39	35	30	24	19	15	48	42	27	17	50	31	45	25	
 
-r4	37	34	29	22	18	33	21	12	31	14	
+r4	51	36	32	28	20	16	52	43	33	21	53	41	49	44	
 
 //Containers Temporary Yard
 
 //Schedule of Moving
-Time 1: 37	->	1
-Time 2: 36	->	1
-Time 3: 35	->	1
+Time 1: 51	->	1
+Time 2: 39	->	1
+Time 3: 37	->	1
 Time 4: 1	->	1
-Time 5: 34	->	2
-Time 6: 32	->	2
-Time 7: 30	->	2
+Time 5: 36	->	2
+Time 6: 35	->	2
+Time 7: 34	->	2
 Time 8: 4	->	2
-Time 9: 29	->	3
-Time 10: 28	->	3
-Time 11: 24	->	3
+Time 9: 32	->	3
+Time 10: 30	->	3
+Time 11: 29	->	3
 Time 12: 7	->	3
-Time 13: 22	->	4
-Time 14: 20	->	4
-Time 15: 19	->	4
+Time 13: 28	->	4
+Time 14: 24	->	4
+Time 15: 22	->	4
 Time 16: 8	->	4
-Time 17: 18	->	5
-Time 18: 16	->	5
-Time 19: 15	->	5
+Time 17: 20	->	5
+Time 18: 19	->	5
+Time 19: 18	->	5
 Time 20: 10	->	5
-Time 21: 33	->	6
-Time 22: 27	->	6
-Time 23: 23	->	6
-Time 24: 2	->	6
-Time 25: 21	->	7
-Time 26: 17	->	7
-Time 27: 13	->	7
-Time 28: 3	->	7
-Time 29: 12	->	8
-Time 30: 11	->	8
-Time 31: 9	->	8
+Time 21: 16	->	6
+Time 22: 15	->	6
+Time 23: 13	->	6
+Time 24: 12	->	6
+Time 25: 52	->	7
+Time 26: 48	->	7
+Time 27: 46	->	7
+Time 28: 2	->	7
+Time 29: 43	->	8
+Time 30: 42	->	8
+Time 31: 38	->	8
 Time 32: 5	->	8
-Time 33: 31	->	9
-Time 34: 26	->	9
-Time 35: 25	->	9
+Time 33: 33	->	9
+Time 34: 27	->	9
+Time 35: 23	->	9
 Time 36: 6	->	9
-Time 37: 14	->	10
+Time 37: 21	->	10
+Time 38: 17	->	10
+Time 39: 11	->	10
+Time 40: 9	->	10
+Time 41: 53	->	11
+Time 42: 50	->	11
+Time 43: 47	->	11
+Time 44: 3	->	11
+Time 45: 41	->	12
+Time 46: 31	->	12
+Time 47: 26	->	12
+Time 48: 14	->	12
+Time 49: 49	->	13
+Time 50: 45	->	13
+Time 51: 40	->	13
+Time 52: 44	->	14
+Time 53: 25	->	14

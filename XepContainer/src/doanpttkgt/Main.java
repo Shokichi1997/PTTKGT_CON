@@ -206,10 +206,6 @@ public class Main {
 		while (baiTau.getContainers() > 0) {
 			List<Container> listCon = sapXepListCon();
 			//Duyet day container phia tren cung cua bai tau
-			System.out.print("\nDanh sách list con: ");
-			for (Container container : listCon) {
-				System.out.print(container.getSoContainer() + "  ");
-			}
 
 			int soLanLap = listCon.size() / heightYard;
 			// So container du de sap xep vua chieu cao bai chinh
@@ -268,39 +264,43 @@ public class Main {
 				soLanLap--;
 
 			}
-
+		
 			System.out.println("Số con dư: "+ soConDu);
-			if (soConVuaDu == 0 && soConDu > 0 && baiTau.getContainers() <= baiChinh.getHeight()) {
+			if (soConVuaDu == 0 && soConDu > 0 ) {//&& baiTau.getContainers() <= baiChinh.getHeight()) {
 				// Xu ly so container con lai (neu con))
 				List<Container> listConDu = sapXepListCon();
-				System.out.print("\nList dư: ");
-				for (Container container : listConDu) {
-					System.out.print(container.getSoContainer()+" ");
-				}
-				for (int i = 0; i < baiConChinh.size(); i++) {
-					while ((baiConChinh.get(i).getColumn().size() < 4) && listConDu.size() > 0) {
-						Container con = listConDu.get(0);
-						if(baiConChinh.get(i).getColumn().size()>0) {
-							if (baiConChinh.get(i).getColumn().peek().getSoContainer() < con.getSoContainer()) {
-								Column newColumn = new Column();
-								baiChinh.setColumns(baiChinh.getColumn()+1);
-								baiConChinh.add(newColumn);
-								break;
+				if(listConDu.size()<baiChinh.getHeight()) {		
+					for (int i = 0; i < baiConChinh.size(); i++) {
+						while ((baiConChinh.get(i).getColumn().size() < 4) && listConDu.size() > 0) {
+							Container con = listConDu.get(0);
+							if(baiConChinh.get(i).getColumn().size()>0) {
+								if (baiConChinh.get(i).getColumn().peek().getSoContainer() < con.getSoContainer()) {
+									if(i<baiChinh.getColumn()-1) {
+										break;
+									}
+									System.out.println(baiConChinh.get(i).getColumn().peek().getSoContainer()+"&&"+con.getSoContainer());
+									Column newColumn = new Column();
+									baiChinh.setColumns(baiChinh.getColumn()+1);
+									baiConChinh.add(newColumn);
+									System.out.println("Thêm cột mới");
+									break;
+								}
 							}
+							
+							int x = con.getRow();
+							int y = con.getColums();
+							System.out.println("số con = " + con.getSoContainer());
+							System.out.println("Số cột = " + y);
+							baiConTau.get(y).getColumn().pop();
+							step.add("Time "+ (++time)+": "+con.getSoContainer()+"\t->\t"+(i+1));
+							baiTau.setContainers(baiTau.getContainers() - 1);
+							System.out.println("So container: "+baiTau.getContainers());
+							baiConChinh.get(i).getColumn().add(con);
+							listConDu.remove(0);
 						}
-						
-						int x = con.getRow();
-						int y = con.getColums();
-						System.out.println("số con = " + con.getSoContainer());
-						System.out.println("Số cột = " + y);
-						baiConTau.get(y).getColumn().pop();
-						step.add("Time "+ (++time)+": "+con.getSoContainer()+"\t->\t"+(i+1));
-						baiTau.setContainers(baiTau.getContainers() - 1);
-						System.out.println("So container: "+baiTau.getContainers());
-						baiConChinh.get(i).getColumn().add(con);
-						listConDu.remove(0);
 					}
 				}
+				
 			}
 
 		}
