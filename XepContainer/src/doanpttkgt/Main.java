@@ -224,7 +224,7 @@ public class Main {
 				//j: chi so cua tung cot container (column)
 				int j = 0;
 				while (j < heightYard) {
-					System.out.println("chiso="+chiSoCotBaiChinh);
+					System.out.println("chiso cot chinh="+chiSoCotBaiChinh);
 					Stack<Container> columnOfYard = baiConChinh.get(chiSoCotBaiChinh).getColumn();
 					//Neu cot hien tai co kich thuoc nho hon chieu cao bai chinh
 					if ((columnOfYard.size() < heightYard) && listCon.size()>0) {
@@ -269,9 +269,14 @@ public class Main {
 
 			}
 
-			if (soConVuaDu == 0 && soConDu > 0) {
+			System.out.println("Số con dư: "+ soConDu);
+			if (soConVuaDu == 0 && soConDu > 0 && baiTau.getContainers() <= baiChinh.getHeight()) {
 				// Xu ly so container con lai (neu con))
 				List<Container> listConDu = sapXepListCon();
+				System.out.print("\nList dư: ");
+				for (Container container : listConDu) {
+					System.out.print(container.getSoContainer()+" ");
+				}
 				for (int i = 0; i < baiConChinh.size(); i++) {
 					while ((baiConChinh.get(i).getColumn().size() < 4) && listConDu.size() > 0) {
 						Container con = listConDu.get(0);
