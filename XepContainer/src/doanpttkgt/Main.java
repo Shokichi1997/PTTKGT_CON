@@ -1,25 +1,36 @@
 package doanpttkgt;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.plaf.SliderUI;
 
 public class Main {
 	private static BaiChinh baiChinh;
 	private static BaiTam baiTam;
 	private static BaiTau baiTau;
-
+	static List<String> step;
+	static String time;
+	static StringBuffer sbRead = new StringBuffer();
+	
 	public static void docFile(String fileName) throws IOException {
 		try {
 			FileReader fr = new FileReader(fileName);
 			BufferedReader br = new BufferedReader(fr);
 
 			String line = br.readLine();
+			
 			int flag = -1;
 			while (line != null) {
 				// System.out.println("flag = "+flag);
@@ -91,12 +102,26 @@ public class Main {
 
 					}
 				}
-
+				if(line!=null) sbRead.append(line+"\n");
 				line = br.readLine();
 			}
 			daoNguocDuLieu();
 			br.close();
 			fr.close();
+
+			if (baiChinh.getColumn() == 0) {
+				int sodu = baiTau.getContainers() % baiChinh.getHeight();
+				int numberColumn = baiTau.getContainers() / baiChinh.getHeight();
+				if (sodu != 0) {
+					numberColumn++;
+				}
+				baiChinh.setColumns(numberColumn);
+			}
+			for (int i = 0; i < baiChinh.getColumn(); i++) {
+				Column column = new Column();
+				baiChinh.getBaiChinh().add(column);
+			}
+
 		} catch (FileNotFoundException e) {
 			System.out.println("Không tìm thấy file " + fileName);
 			System.exit(0);
@@ -110,6 +135,8 @@ public class Main {
 			for (int j = 0; j < baiTau.getHeight(); j++) {
 				Container con = baiTau.getBaiTau().get(i).getColumn().pop();
 				listCon.add(con);
+				con.setRow(j);
+				con.setColums(i);
 
 			}
 
@@ -127,17 +154,24 @@ public class Main {
 
 		for (int i = 0; i < baiTau.getColumns(); i++) {
 			if (!baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
-				Container con = baiTau.getBaiTau().get(i).getColumn().pop();// lay object container
+				Container con = baiTau.getBaiTau().get(i).getColumn().peek();// lay object container
 				int soContainer = con.getSoContainer();// lay gia tri cua container
-
+				if (soContainer == -1) {
+					// Neu container la x thi bo no ra khoi bai
+					baiTau.getBaiTau().get(i).getColumn().pop();
+				}
 				while (soContainer == -1 && !baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
 					if (!baiTau.getBaiTau().get(i).getColumn().isEmpty()) {
 						// neu la x thi lay container o hang tiep theo cua cot
-						con = baiTau.getBaiTau().get(i).getColumn().pop();
+						con = baiTau.getBaiTau().get(i).getColumn().peek();
 						soContainer = con.getSoContainer();
+						if (soContainer == -1) {
+							// Neu container la x thi bo no ra khoi bai
+							baiTau.getBaiTau().get(i).getColumn().pop();
+						}
 					}
 				}
-				if (!(soContainer == -1)) {
+				if (soContainer != -1) {
 					listSS.add(con);
 				}
 			}
@@ -158,28 +192,210 @@ public class Main {
 		}
 		return list;
 	}
-	
+
+	public static void bocContainer() {
+		step.add("//Schedule of Moving");
+		List<Column> baiConChinh = baiChinh.getBaiChinh();
+		int heightYard = baiChinh.getHeight();
+		List<Column> baiConTau = baiTau.getBaiTau();
+		int time = 0;
+
+		int soConDu = 0;
+		int k = 20;
+		//Khi tren bai tau con container thi lam viec
+		while (baiTau.getContainers() > 0) {
+			List<Container> listCon = sapXepListCon();
+			//Duyet day container phia tren cung cua bai tau
+			System.out.print("\nDanh sách list con: ");
+			for (Container container : listCon) {
+				System.out.print(container.getSoContainer() + "  ");
+			}
+
+			int soLanLap = listCon.size() / heightYard;
+			// So container du de sap xep vua chieu cao bai chinh
+			int soConVuaDu = listCon.size() - listCon.size() % heightYard;
+			//So con du la so container con lai khong du de xep vua hang bai chinh
+			soConDu = listCon.size() % heightYard;
+			
+			
+			int chiSoCotBaiChinh = 0;
+			//Neu so container vua du van con
+			while (soConVuaDu > 0) {
+				//j: chi so cua tung cot container (column)
+				int j = 0;
+				while (j < heightYard) {
+					System.out.println("chiso="+chiSoCotBaiChinh);
+					Stack<Container> columnOfYard = baiConChinh.get(chiSoCotBaiChinh).getColumn();
+					//Neu cot hien tai co kich thuoc nho hon chieu cao bai chinh
+					if ((columnOfYard.size() < heightYard) && listCon.size()>0) {
+						//TH1: khi cot co so container nho hon chieu cao cua bai chinh - 1 thi them container co
+						//chi so lon nhat vao
+						if (columnOfYard.size() < heightYard - 1) {
+							System.out.println(listCon.size());
+							Container con = listCon.get(0);
+							int x = con.getRow();
+							int y = con.getColums();
+							baiConTau.get(y).getColumn().pop();
+							step.add("Time "+ (++time)+": "+con.getSoContainer()+"\t->\t"+(chiSoCotBaiChinh+1));
+							baiTau.setContainers(baiTau.getContainers() - 1);
+							System.out.println("Thêm "+con.getSoContainer());
+							baiConChinh.get(chiSoCotBaiChinh).getColumn().add(con);
+							listCon.remove(0);
+							soConVuaDu--;
+						} else { 
+							//TH2: khi cot da co 3 container thi xep container co so nho nhat vao 
+							Container con = listCon.get(listCon.size() - 1);
+							int x = con.getRow();
+							int y = con.getColums();
+							baiConTau.get(y).getColumn().pop();
+							step.add("Time "+ (++time)+": "+con.getSoContainer()+"\t->\t"+(chiSoCotBaiChinh+1));
+							baiTau.setContainers(baiTau.getContainers() - 1);
+							System.out.println("Thêm "+con.getSoContainer());
+							baiConChinh.get(chiSoCotBaiChinh).getColumn().add(con);
+							listCon.remove(listCon.size() - 1);
+							soConVuaDu--;
+						}
+
+					} else {
+						chiSoCotBaiChinh++;
+						break;
+					}
+					j++;
+
+				}
+
+				// }
+				soLanLap--;
+
+			}
+
+			if (soConVuaDu == 0 && soConDu > 0) {
+				// Xu ly so container con lai (neu con))
+				List<Container> listConDu = sapXepListCon();
+				for (int i = 0; i < baiConChinh.size(); i++) {
+					while ((baiConChinh.get(i).getColumn().size() < 4) && listConDu.size() > 0) {
+						Container con = listConDu.get(0);
+						if(baiConChinh.get(i).getColumn().size()>0) {
+							if (baiConChinh.get(i).getColumn().peek().getSoContainer() < con.getSoContainer()) {
+								Column newColumn = new Column();
+								baiChinh.setColumns(baiChinh.getColumn()+1);
+								baiConChinh.add(newColumn);
+								break;
+							}
+						}
+						
+						int x = con.getRow();
+						int y = con.getColums();
+						System.out.println("số con = " + con.getSoContainer());
+						System.out.println("Số cột = " + y);
+						baiConTau.get(y).getColumn().pop();
+						step.add("Time "+ (++time)+": "+con.getSoContainer()+"\t->\t"+(i+1));
+						baiTau.setContainers(baiTau.getContainers() - 1);
+						System.out.println("So container: "+baiTau.getContainers());
+						baiConChinh.get(i).getColumn().add(con);
+						listConDu.remove(0);
+					}
+				}
+			}
+
+		}
+
+	}
 
 	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
+
+
+		
 		baiChinh = new BaiChinh();
 		baiTam = new BaiTam();
 		baiTau = new BaiTau();
-
+		step = new ArrayList<>();
+		
+		String fileName = "test";
 		try {
-			docFile("test.txt");
+			docFile(fileName+".txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.exit(0);
 		}
-		for (int i = 0; i < baiTau.getHeight(); i++) {
-			List<Container> list = sapXepListCon();
-			if (list.size()!=0) {
-				System.out.print("\nso lon nhat dong :" + i);
-				for (Container container : list) {
-					System.out.print(container.getSoContainer() + " ");
+
+		bocContainer();
+
+		long endTime = System.currentTimeMillis();
+		long temp = endTime - startTime;
+		DecimalFormat num = new DecimalFormat("#.###");
+		time = num.format(temp/1000.0);
+		System.out.println("That took " + time + " milliseconds");
+		
+		ghiFile(fileName+"HAsolved.txt");
+
+	}
+
+	private static void ghiFile(String fileName) {
+		BufferedWriter br = null;
+		FileWriter fr = null;
+		try {
+			fr = new FileWriter(fileName);
+			br = new BufferedWriter(fr);
+			
+			//Ghi file
+			br.write(sbRead.toString());
+			
+			//
+			br.write("\n//OUT PUT\n");
+			br.write(time+"//Total Cost of moving\n");
+			br.write("0//Cost of moving to Temporary Yard\n");
+			br.write("//Containers Position in Main Yard\n");
+			for(int i=0;i<=baiChinh.getColumn();i++) {
+				if(i==0) {
+					br.write("\t");
+				}
+				else {
+					br.write("c"+i+"\t");
 				}
 			}
+			
+			//Lấp đầy để in ra
+			for(int i = 0;i<baiChinh.getColumn();i++) {
+				Stack<Container> curentColumn = baiChinh.getBaiChinh().get(i).getColumn();
+				if(curentColumn.size()<baiChinh.getHeight()) {
+					while(curentColumn.size()<baiChinh.getHeight()) {
+						curentColumn.push(new Container(-1, i, 0));
+					}
+				}
+			}
+			
+			for(int k = 0;k<baiChinh.getHeight();k++) {
+				br.write("\nr"+(k+1)+"\t");
+				for(int i = 0; i < baiChinh.getColumn();i++) {
+					Stack<Container> column = null;
+					column = baiChinh.getBaiChinh().get(i).getColumn();
+					if (!column.isEmpty()) {
+						Container con = column.pop();
+						if(con.getSoContainer()==-1) {
+							br.write(" "+"\t");
+						}
+						else
+							br.write(con.getSoContainer()+"\t");
+					}
+				}
+				br.write("\n");
+			}
+			
+			br.write("\n//Containers Temporary Yard\n");
+			
+			for(int i = 0;i<step.size();i++) {
+				br.write("\n"+step.get(i));
+			}
+			
+			br.close();
+			fr.close();
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

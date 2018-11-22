@@ -6,7 +6,7 @@ import java.util.List;
 public class BaiChinh {
 	private List<Column> baiChinh = null;
 	private int height;
-	private int columns;
+	private int columns = 0;
 	
 	public BaiChinh() {
 		baiChinh = new ArrayList<Column>();
@@ -26,6 +26,11 @@ public class BaiChinh {
 
 	public int getHeight() {
 		return height;
+	}
+
+	public int getColumn() {
+		// TODO Auto-generated method stub
+		return columns;
 	}
 
 	

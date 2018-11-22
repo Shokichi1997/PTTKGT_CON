@@ -33,9 +33,6 @@ public class BaiTau {
 
         try {   
         	brRead = new BufferedReader(new FileReader("test.txt"));       
-
-            System.out.println("�?�?c nội dung file sử dụng phương thức read()");
-
             String num;
             String kitu[];
 
@@ -72,5 +69,7 @@ public class BaiTau {
 		return baiTau;
 	}
 
-
+	public int getContainers() {
+		return containers;
+	}
 }
